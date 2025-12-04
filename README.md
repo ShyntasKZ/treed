@@ -162,10 +162,3 @@ The output is deterministic, alphabetically sorted, and consistent across all pl
 MIT License.
 
 ---
-
-Если хочешь, могу:
-
-✔ добавить раздел *Building from source*
-✔ написать *Contributing Guidelines*
-✔ подготовить логотип и badges
-✔ собрать полный релиз-чейнджлог под версию 1.0.
