@@ -1,90 +1,99 @@
 # 📄 **README.md**
+---
 
-# **treed — A clean and developer-friendly directory tree generator**
+# treed — a clean and developer-friendly directory tree generator
 
-**treed** is a lightweight cross-platform CLI tool that generates clean directory tree views for your projects.
-It removes build artifacts, IDE folders, and other noise by default — showing only what developers actually care about: the structure of their source code.
+`treed` is a small, fast, cross-platform command-line tool that prints clean directory trees for your projects.
+It automatically ignores development artifacts such as build folders, IDE configuration directories, caches, and temporary files.
+This makes it useful for documentation, code reviews, onboarding, and understanding unfamiliar repositories.
 
-It can output either a standard console tree or a Markdown-formatted version suitable for documentation.
+You can output the tree to the console, or export it as a Markdown file for README files, wikis, or technical documentation.
 
 ---
 
-## ✨ Features
+## Why treed?
 
-* **Clean directory trees**
-  Automatically ignores common build folders and temporary files:
+Most projects contain a lot of noise:
 
-  * Directories: `bin`, `obj`, `.git`, `.vs`, `.idea`, `.vscode`, `node_modules`, `packages`
-  * Files: `.dll`, `.pdb`, `.cache`, `.tmp`, `.log`, `.exe`
+* `bin/`, `obj/` build output
+* IDE folders: `.vs/`, `.idea/`, `.vscode/`
+* dependency folders like `node_modules/`
+* auto-generated files
 
-* **Markdown export**
-  Generate documentation-ready `.md` files using:
+When exploring a repository, these items distract from the actual code structure.
 
-  ```bash
+`treed` hides all of that by default, giving you a clean and readable view of the project layout.
+
+---
+
+## Features
+
+* Clean directory trees (build artifacts and IDE folders automatically excluded)
+* Markdown export:
+
+  ```
   treed . -md structure
   ```
-
-* **Relative path support**
-  Just like in any shell:
-
-  ```
-  treed .
-  treed ..
-  treed src/Services
-  ```
-
-* **Cross-platform**
-  Ships as a self-contained single-file binary for Windows, Linux, and macOS.
-  No runtime installation required.
-
-* **Zero dependencies**
-  The resulting binary contains everything it needs.
+* Relative path support: `.`, `..`, `folder/subfolder`
+* Single-file, self-contained binaries for Windows, Linux, and macOS
+* No runtime required (does not require .NET to be installed)
+* Simple syntax, fast execution, small footprint
 
 ---
 
-## 📦 Installation
+## Installation
 
-Download the latest release from GitHub:
+Download a release from the GitHub Releases page and place the binary somewhere in your PATH.
+
+### Windows
+
+Move the file:
 
 ```
-treed-win-x64.exe
-treed-linux-x64
-treed-osx-arm64
-...
+treed.exe → C:\tools\treed\treed.exe
 ```
 
-Make it available globally by placing it in a folder included in your PATH
-(e.g., `C:\tools\` on Windows or `/usr/local/bin` on Linux/macOS).
+Add to PATH if needed:
+
+```
+setx PATH "%PATH%;C:\tools\treed"
+```
+
+### Linux / macOS
+
+```
+sudo mv treed /usr/local/bin/treed
+sudo chmod +x /usr/local/bin/treed
+```
 
 ---
 
-## 🚀 Usage
+## Usage
 
-### Show tree of the current directory
+Show a tree of the current directory:
 
-```bash
+```
 treed .
 ```
 
-### Show tree of a relative path
+Show a tree of another folder:
 
-```bash
+```
 treed src
 treed ../backend
 ```
 
-### Export tree as Markdown
+Export as Markdown (`structure.md` will be created):
 
-```bash
+```
 treed . -md structure
-# generates structure.md
 ```
 
 ---
 
-## 📘 Example output
+## Example Output
 
-### Console mode
+### Console tree
 
 ```
 src
@@ -98,7 +107,7 @@ src
     └── Events
 ```
 
-### Markdown mode
+### Markdown output
 
 ```
 - **src/**
@@ -114,9 +123,9 @@ src
 
 ---
 
-## 🧹 What treed ignores automatically
+## Ignored files and directories
 
-Treed hides files and directories that are normally not part of source control:
+`treed` automatically excludes items that are not part of the actual source code.
 
 ### Ignored directories
 
@@ -142,22 +151,89 @@ packages/
 .exe
 ```
 
-This keeps the output focused on **source code** and nothing else.
+This makes the output focused, readable, and suitable for documentation.
 
 ---
 
-## 🛠 How it works (summary)
+## Building from source
 
-treed recursively walks the target directory, filters out noise, and prints a clean tree with:
+Clone the repository:
 
-* `├──` / `└──` connectors (console mode)
-* nested Markdown lists (markdown mode)
+```
+git clone https://github.com/<your-account>/treed.git
+cd treed
+```
 
-The output is deterministic, alphabetically sorted, and consistent across all platforms.
+Build normally:
+
+```
+dotnet build -c Release
+```
+
+Run locally:
+
+```
+dotnet run -- .
+```
 
 ---
 
-## 📄 License
+## Publishing self-contained binaries (Windows, Linux, macOS)
+
+`treed` can be published as single-file executables that run without installing .NET.
+
+Run the following commands inside the project:
+
+### Windows (x64)
+
+```
+dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=true
+```
+
+Output:
+
+```
+bin/Release/net10.0/win-x64/publish/treed.exe
+```
+
+---
+
+### Linux (x64)
+
+```
+dotnet publish -c Release -r linux-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=true
+```
+
+Output:
+
+```
+bin/Release/net10.0/linux-x64/publish/treed
+```
+
+---
+
+### macOS (Intel)
+
+```
+dotnet publish -c Release -r osx-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=true
+```
+
+### macOS (Apple Silicon / ARM)
+
+```
+dotnet publish -c Release -r osx-arm64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=true
+```
+
+---
+
+## Notes
+
+* The `PublishTrimmed=true` setting reduces binary size by removing unused .NET components.
+* All published outputs are standalone and do not require .NET runtime installation.
+
+---
+
+## License
 
 MIT License.
 
